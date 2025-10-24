@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Администрирование среды виртуализации</title>
+  <title>Администрирование виртуальных машин</title>
   <style>
     * {
       margin: 0;
@@ -14,7 +14,7 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
-      background-color: #f5f5f5;
+      background-color: #f9f9f9;
       color: #333;
     }
 
@@ -27,7 +27,7 @@
     }
 
     .sidebar {
-      width: 280px;
+      width: 260px;
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -64,8 +64,7 @@
       border-radius: 4px;
     }
 
-    .nav-link:hover,
-    .nav-link.active {
+    .nav-link:hover {
       background: #eaf2f8;
       border-left: 3px solid #3498db;
       color: #2c3e50;
@@ -105,38 +104,63 @@
 
     .content h1 {
       font-size: 2.2em;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       color: #2c3e50;
+      text-align: center;
       border-bottom: 2px solid #3498db;
       padding-bottom: 10px;
     }
 
-    .content h2 {
-      font-size: 1.6em;
-      margin: 25px 0 15px;
-      color: #2c3e50;
+    details {
+      margin-bottom: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #fafafa;
     }
 
-    .content h3 {
-      font-size: 1.3em;
-      margin: 20px 0 10px;
-      color: #2980b9;
+    summary {
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      outline: none;
+      background: #f0f8ff;
+      border-radius: 6px 6px 0 0;
     }
 
-    .content p {
-      margin: 10px 0;
+    summary:hover {
+      background: #e6f2ff;
+    }
+
+    details[open] > summary {
+      background: #d4e6f1;
+      border-bottom: 1px solid #b0c4de;
+    }
+
+    details > div {
+      padding: 16px;
+    }
+
+    details details {
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      background: white;
+    }
+
+    details details summary {
+      background: #f9f9f9;
+      font-weight: normal;
+      font-size: 0.95em;
+    }
+
+    details details[open] summary {
+      background: #f0f8ff;
+    }
+
+    p {
+      margin: 8px 0;
       text-align: justify;
     }
 
-    .highlight {
-      background: #fffacd;
-      padding: 15px;
-      border-left: 4px solid #ffc107;
-      margin: 20px 0;
-      border-radius: 4px;
-    }
-
-    /* Для мобильных устройств */
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
@@ -156,9 +180,7 @@
     <aside class="sidebar">
       <h2>Содержание</h2>
       <ul class="nav-list">
-
-        <li class="nav-item">
-          <a href="#section1" class="nav-link">Описание и установка</a>
+        <li class="nav-item"><a href="#sec1" class="nav-link">1. Введение</a>
           <ul class="nav-sublist">
             <li><a href="#1.1" class="nav-sublink">1.1 Описание</a></li>
             <li><a href="#1.2" class="nav-sublink">1.2 Ограничения виртуальных машин</a></li>
@@ -169,249 +191,328 @@
             <li><a href="#1.5" class="nav-sublink">1.5 Завершение сеанса на портале</a></li>
           </ul>
         </li>
-
-        <li class="nav-item">
-          <a href="#section2" class="nav-link">Администрирование среды виртуализации</a>
-          <ul class="nav-sublist">
-            <li><a href="#2.1" class="nav-sublink">2.1 Описание</a></li>
-            <li><a href="#2.2" class="nav-sublink">2.2 Создание виртуальной машины</a></li>
-            <li><a href="#2.3" class="nav-sublink">2.3 Запуск виртуальной машины</a></li>
-            <li><a href="#2.4" class="nav-sublink">2.4 Открытие консоли для виртуальной машины</a></li>
-            <li><a href="#2.5" class="nav-sublink">2.5 Гостевые агенты РЕД Виртуализации, инструменты и драйверы</a></li>
-            <li><a href="#2.6" class="nav-sublink">2.6 Установка гостевых агентов и драйверов в РЕД ОС</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section3" class="nav-link">Администрирование виртуальных машин в среде виртуализации</a>
-          <ul class="nav-sublist">
-            <li><a href="#3.1" class="nav-sublink">3.1 Описание</a></li>
-            <li><a href="#3.2" class="nav-sublink">3.2 Создание виртуальной машины</a></li>
-            <li><a href="#3.3" class="nav-sublink">3.3 Запуск виртуальной машины</a></li>
-            <li><a href="#3.3.1" class="nav-sublink">3.3.1 Установка Windows на оптимизированное для VirtIO оборудование</a></li>
-            <li><a href="#3.3.2" class="nav-sublink">3.3.2 Открытие консоли на виртуальной машине</a></li>
-            <li><a href="#3.4" class="nav-sublink">3.4 Установка гостевых агентов и драйверов</a></li>
-            <li><a href="#3.4.5" class="nav-sublink">3.4.5 Гостевые агенты, инструменты и драйверы</a></li>
-            <li><a href="#3.4.6" class="nav-sublink">3.4.6 Установка гостевых агентов, инструментов и драйверов в Windows</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section4" class="nav-link">Дополнительная конфигурация</a>
-          <ul class="nav-sublist">
-            <li><a href="#4.1" class="nav-sublink">4.1 Настройка операционных систем с помощью osinfo</a></li>
-            <li><a href="#4.2" class="nav-sublink">4.2 Настройка единого входа для виртуальных машин</a></li>
-            <li><a href="#4.3" class="nav-sublink">4.3 Настройка USB-устройств</a></li>
-            <li><a href="#4.4" class="nav-sublink">4.4 Настройка нескольких мониторов</a></li>
-            <li><a href="#4.5" class="nav-sublink">4.5 Настройка параметров консоли</a></li>
-            <li><a href="#4.6" class="nav-sublink">4.6 Настройка сторожевого таймера</a></li>
-            <li><a href="#4.7" class="nav-sublink">4.7 Настройка виртуального NUMA</a></li>
-            <li><a href="#4.8" class="nav-sublink">4.8 Настройка headless-виртуальных машин</a></li>
-            <li><a href="#4.9" class="nav-sublink">4.9 Настройка высокопроизводительных виртуальных машин, шаблонов и пулов</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section5" class="nav-link">Редактирование виртуальных машин</a>
-          <ul class="nav-sublist">
-            <li><a href="#5.1" class="nav-sublink">5.1 Редактирование свойств виртуальной машины</a></li>
-            <li><a href="#5.2" class="nav-sublink">5.2 Сетевые интерфейсы</a></li>
-            <li><a href="#5.2.1" class="nav-sublink">5.2.1 Добавление нового сетевого интерфейса</a></li>
-            <li><a href="#5.2.2" class="nav-sublink">5.2.2 Редактирование сетевого интерфейса</a></li>
-            <li><a href="#5.2.3" class="nav-sublink">5.2.3 Горячее подключение сетевого интерфейса</a></li>
-            <li><a href="#5.2.4" class="nav-sublink">5.2.4 Удаление сетевого интерфейса</a></li>
-            <li><a href="#5.2.5" class="nav-sublink">5.2.5 Внесение сетевых интерфейсов в черный список</a></li>
-            <li><a href="#5.3" class="nav-sublink">5.3 Виртуальные диски</a></li>
-            <li><a href="#5.3.1" class="nav-sublink">Добавление нового виртуального диска</a></li>
-            <li><a href="#5.3.2" class="nav-sublink">Присоединение существующего диска к виртуальной машине</a></li>
-            <li><a href="#5.3.3" class="nav-sublink">Увеличение доступного размера виртуального диска</a></li>
-            <li><a href="#5.3.4" class="nav-sublink">Горячее подключение виртуального диска</a></li>
-            <li><a href="#5.3.5" class="nav-sublink">Удаление виртуального диска с виртуальной машины</a></li>
-            <li><a href="#5.3.6" class="nav-sublink">Импорт образа диска</a></li>
-            <li><a href="#5.3.7" class="nav-sublink">Импорт незарегистрированного образа диска</a></li>
-            <li><a href="#5.4" class="nav-sublink">5.4 Виртуальная память</a></li>
-            <li><a href="#5.4.1" class="nav-sublink">5.4.1 Горячее подключение виртуальной памяти</a></li>
-            <li><a href="#5.4.2" class="nav-sublink">5.4.2 Горячее отключение виртуальной памяти</a></li>
-            <li><a href="#5.5" class="nav-sublink">5.5 Горячее подключение виртуальных ЦП</a></li>
-            <li><a href="#5.6" class="nav-sublink">5.6 Прикрепление виртуальной машины к нескольким хостам</a></li>
-            <li><a href="#5.7" class="nav-sublink">5.7 Просмотр виртуальных машин, закрепленных на хосте</a></li>
-            <li><a href="#5.8" class="nav-sublink">5.8 Смена компакт-диска на виртуальную машину</a></li>
-            <li><a href="#5.9" class="nav-sublink">5.9 Проверка подлинности смарт-карты</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section6" class="nav-link">Административные задачи</a>
-          <ul class="nav-sublist">
-            <li><a href="#6.1" class="nav-sublink">6.1 Завершение работы виртуальной машины</a></li>
-            <li><a href="#6.2" class="nav-sublink">6.2 Приостановка виртуальной машины</a></li>
-            <li><a href="#6.3" class="nav-sublink">6.3 Перезагрузка виртуальной машины</a></li>
-            <li><a href="#6.4" class="nav-sublink">6.4 Удаление виртуальной машины</a></li>
-            <li><a href="#6.5" class="nav-sublink">6.5 Клонирование виртуальной машины</a></li>
-            <li><a href="#6.6" class="nav-sublink">6.6 Обновление гостевых агентов и драйверов</a></li>
-            <li><a href="#6.6.1" class="nav-sublink">6.6.1 Обновление гостевых агентов и драйверов в РЕД ОС</a></li>
-            <li><a href="#6.6.2" class="nav-sublink">6.6.2 Обновление гостевых агентов и драйверов в Windows</a></li>
-            <li><a href="#6.7" class="nav-sublink">6.7 Снимки</a></li>
-            <li><a href="#6.7.1" class="nav-sublink">6.7.1 Создание снимка виртуальной машины</a></li>
-            <li><a href="#6.7.2" class="nav-sublink">6.7.2 Использование снимка для восстановления виртуальной машины</a></li>
-            <li><a href="#6.7.3" class="nav-sublink">6.7.3 Создание виртуальной машины из снимка</a></li>
-            <li><a href="#6.7.4" class="nav-sublink">6.7.4 Удаление снимка</a></li>
-            <li><a href="#6.8" class="nav-sublink">6.8 Хост-устройства</a></li>
-            <li><a href="#6.8.1" class="nav-sublink">6.8.1 Добавление хост-устройства к виртуальной машине</a></li>
-            <li><a href="#6.8.2" class="nav-sublink">6.8.2 Удаление хост-устройств с виртуальной машины</a></li>
-            <li><a href="#6.8.3" class="nav-sublink">6.8.3 Прикрепление виртуальной машины к другому хосту</a></li>
-            <li><a href="#6.9" class="nav-sublink">6.9 Группы по интересам</a></li>
-            <li><a href="#6.9.1" class="nav-sublink">6.9.1 Создание группы по интересам</a></li>
-            <li><a href="#6.9.2" class="nav-sublink">6.9.2 Редактирование группы по интересам</a></li>
-            <li><a href="#6.9.3" class="nav-sublink">6.9.3 Удаление группы по интересам</a></li>
-            <li><a href="#6.9.4" class="nav-sublink">6.9.4 Примеры групп по интересам</a></li>
-            <li><a href="#6.9.5" class="nav-sublink">6.9.5 Устранение неполадок группы по интересам</a></li>
-            <li><a href="#6.10" class="nav-sublink">6.10 Метки соответствия</a></li>
-            <li><a href="#6.10.1" class="nav-sublink">6.10.1 Создание метки соответствия</a></li>
-            <li><a href="#6.10.2" class="nav-sublink">6.10.2 Редактирование метки соответствия</a></li>
-            <li><a href="#6.10.3" class="nav-sublink">6.10.3 Удаление метки соответствия</a></li>
-            <li><a href="#6.11" class="nav-sublink">6.11 Экспорт и импорт виртуальных машин и шаблонов</a></li>
-            <li><a href="#6.11.1" class="nav-sublink">6.11.1 Экспорт виртуальной машины в экспортный домен</a></li>
-            <li><a href="#6.11.2" class="nav-sublink">6.11.2 Экспорт виртуальной машины в домен данных</a></li>
-            <li><a href="#6.11.3" class="nav-sublink">6.11.3 Импорт виртуальной машины из экспортного домена</a></li>
-            <li><a href="#6.11.4" class="nav-sublink">6.11.4 Импорт виртуальной машины от поставщика VMware</a></li>
-            <li><a href="#6.11.5" class="nav-sublink">6.11.5 Экспорт виртуальной машины на хост</a></li>
-            <li><a href="#6.11.6" class="nav-sublink">6.11.6 Импорт виртуальной машины с хоста</a></li>
-            <li><a href="#6.11.7" class="nav-sublink">6.11.7 Импорт виртуальной машины с узла KVM</a></li>
-            <li><a href="#6.12" class="nav-sublink">6.12 Перенос виртуальных машин между хостами</a></li>
-            <li><a href="#6.12.1" class="nav-sublink">6.12.1 Предварительные условия для живой миграции</a></li>
-            <li><a href="#6.12.2" class="nav-sublink">6.12.2 Оптимизация живой миграции</a></li>
-            <li><a href="#6.12.3" class="nav-sublink">6.12.3 Хуки для гостевого агента</a></li>
-            <li><a href="#6.12.4" class="nav-sublink">6.12.4 Автоматическая миграция виртуальной машины</a></li>
-            <li><a href="#6.12.5" class="nav-sublink">6.12.5 Предотвращение автоматической миграции виртуальной машины</a></li>
-            <li><a href="#6.12.6" class="nav-sublink">6.12.6 Перенос виртуальных машин вручную</a></li>
-            <li><a href="#6.12.7" class="nav-sublink">6.12.7 Установка приоритета миграции</a></li>
-            <li><a href="#6.12.8" class="nav-sublink">6.12.8 Отмена текущей миграции виртуальных машин</a></li>
-            <li><a href="#6.12.9" class="nav-sublink">6.12.9 Уведомление о событиях и журналах при автоматической миграции</a></li>
-            <li><a href="#6.13" class="nav-sublink">6.13 Повышение времени безотказной работы за счет высокой доступности виртуальных машин</a></li>
-            <li><a href="#6.13.1" class="nav-sublink">6.13.1 Что такое высокая доступность?</a></li>
-            <li><a href="#6.13.2" class="nav-sublink">6.13.2 Рекомендации по обеспечению высокой доступности</a></li>
-            <li><a href="#6.13.3" class="nav-sublink">6.13.3 Настройка высокодоступной виртуальной машины</a></li>
-            <li><a href="#6.14" class="nav-sublink">6.14 Другие задачи виртуальной машины</a></li>
-            <li><a href="#6.14.1" class="nav-sublink">6.14.1 Включение мониторинга SAP</a></li>
-            <li><a href="#6.14.2" class="nav-sublink">6.14.2 Настройка виртуальных машин РЕД ОС для использования SPICE</a></li>
-            <li><a href="#6.14.3" class="nav-sublink">6.14.3 Управление синхронизацией виртуальной машины KVM</a></li>
-            <li><a href="#6.15" class="nav-sublink">6.15 Управление консольными сессиями пользователей</a></li>
-            <li><a href="#6.15.1" class="nav-sublink">6.15.1 Текущие активные сессии пользователей</a></li>
-            <li><a href="#6.15.2" class="nav-sublink">6.15.2 Прерывание активных сессий пользователей</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section7" class="nav-link">Шаблоны</a>
-          <ul class="nav-sublist">
-            <li><a href="#7.1" class="nav-sublink">7.1 Запечатывание виртуальных машин</a></li>
-            <li><a href="#7.1.1" class="nav-sublink">7.1.1 Описание</a></li>
-            <li><a href="#7.1.2" class="nav-sublink">7.1.2 Запечатывание виртуальной машины Linux</a></li>
-            <li><a href="#7.1.3" class="nav-sublink">7.1.3 Запечатывание виртуальной машины Windows</a></li>
-            <li><a href="#7.2" class="nav-sublink">7.2 Создание шаблона</a></li>
-            <li><a href="#7.3" class="nav-sublink">7.3 Редактирование шаблона</a></li>
-            <li><a href="#7.4" class="nav-sublink">7.4 Удаление шаблона</a></li>
-            <li><a href="#7.5" class="nav-sublink">7.5 Экспорт шаблонов</a></li>
-            <li><a href="#7.5.1" class="nav-sublink">7.5.1 Перенос шаблонов в экспортный домен</a></li>
-            <li><a href="#7.5.2" class="nav-sublink">7.5.2 Копирование шаблона виртуального жесткого диска</a></li>
-            <li><a href="#7.6" class="nav-sublink">7.6 Импорт шаблонов</a></li>
-            <li><a href="#7.6.1" class="nav-sublink">7.6.1 Импорт шаблона в центр обработки данных</a></li>
-            <li><a href="#7.6.2" class="nav-sublink">7.6.2 Импорт виртуального диска из службы образов OpenStack</a></li>
-            <li><a href="#7.7" class="nav-sublink">7.7 Шаблоны и разрешения</a></li>
-            <li><a href="#7.7.1" class="nav-sublink">7.7.1 Управление системными разрешениями для шаблона</a></li>
-            <li><a href="#7.7.2" class="nav-sublink">7.7.2 Назначение ресурсу роли администратора или пользователя</a></li>
-            <li><a href="#7.7.3" class="nav-sublink">7.7.3 Удаление роли администратора или пользователя из ресурса</a></li>
-            <li><a href="#7.8" class="nav-sublink">7.8 Использование Cloud-Init</a></li>
-            <li><a href="#7.8.1" class="nav-sublink">7.8.1 Сценарии использования Cloud-Init</a></li>
-            <li><a href="#7.8.2" class="nav-sublink">7.8.2 Установка Cloud-Init</a></li>
-            <li><a href="#7.8.3" class="nav-sublink">7.8.3 Использование Cloud-Init для подготовки шаблона</a></li>
-            <li><a href="#7.8.4" class="nav-sublink">7.8.4 Использование Cloud-Init для инициализации виртуальной машины</a></li>
-            <li><a href="#7.9" class="nav-sublink">7.9 Использование Sysprep</a></li>
-            <li><a href="#7.9.1" class="nav-sublink">7.9.1 Настройка Sysprep на шаблоне</a></li>
-            <li><a href="#7.9.2" class="nav-sublink">7.9.2 Использование Sysprep для инициализации виртуальной машины</a></li>
-            <li><a href="#7.10" class="nav-sublink">7.10 Создание виртуальной машины на основе шаблона</a></li>
-            <li><a href="#7.11" class="nav-sublink">7.11 Создание клонированной виртуальной машины</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a href="#section8" class="nav-link">Группы виртуальных машин</a>
-          <ul class="nav-sublist">
-            <li><a href="#8.1" class="nav-sublink">8.1 Создание группы ВМ</a></li>
-            <li><a href="#8.2" class="nav-sublink">8.2 Назначение прав доступа группе ВМ</a></li>
-            <li><a href="#8.3" class="nav-sublink">8.3 Добавление новой виртуальной машины в группу ВМ</a></li>
-            <li><a href="#8.4" class="nav-sublink">8.4 Добавление существующей виртуальной машины в группу ВМ</a></li>
-            <li><a href="#8.5" class="nav-sublink">8.5 Перемещение нескольких виртуальных машин в группу ВМ</a></li>
-          </ul>
-        </li>
-
+        <li class="nav-item"><a href="#sec2" class="nav-link">2. Установка виртуальных машин РЕД ОС</a></li>
+        <li class="nav-item"><a href="#sec3" class="nav-link">3. Установка виртуальных машин Windows</a></li>
+        <li class="nav-item"><a href="#sec4" class="nav-link">4. Дополнительная конфигурация</a></li>
+        <li class="nav-item"><a href="#sec5" class="nav-link">5. Редактирование виртуальных машин</a></li>
+        <li class="nav-item"><a href="#sec6" class="nav-link">6. Административные задачи</a></li>
+        <li class="nav-item"><a href="#sec7" class="nav-link">7. Шаблоны</a></li>
+        <li class="nav-item"><a href="#sec8" class="nav-link">8. Группы виртуальных машин</a></li>
       </ul>
     </aside>
 
     <!-- Основной контент -->
     <main class="content">
-      <h1>Администрирование среды виртуализации</h1>
+      <h1>Администрирование виртуальных машин</h1>
 
-      <div id="section1">
-        <h2>Описание и установка</h2>
-        <p>Здесь будет описание и установка.</p>
-      </div>
+      <!-- 1. Введение -->
+      <details id="sec1">
+        <summary>1. Введение</summary>
+        <div>
+          <details id="1.1"><summary>1.1 Описание</summary><div><p>Описание продукта и его назначения.</p></div></details>
+          <details id="1.2"><summary>1.2 Ограничения виртуальных машин</summary><div><p>Перечень ограничений при работе с виртуальными машинами.</p></div></details>
+          <details id="1.3">
+            <summary>1.3 Установка вспомогательных компонентов</summary>
+            <div>
+              <details id="1.3.1"><summary>1.3.1 Установка компонентов консоли</summary><div><p>Установка компонентов для работы через консоль.</p></div></details>
+              <details id="1.3.2"><summary>1.3.2 Установка usbdk в Windows</summary><div><p>Инструкция по установке USBDK для работы с USB-устройствами.</p></div></details>
+            </div>
+          </details>
+          <details id="1.4"><summary>1.4 Авторизация на портале</summary><div><p>Как авторизоваться на портале управления.</p></div></details>
+          <details id="1.5"><summary>1.5 Завершение сеанса на портале</summary><div><p>Как безопасно завершить сеанс.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section2">
-        <h2>Администрирование среды виртуализации</h2>
-        <p>Здесь будет администрирование среды виртуализации.</p>
-      </div>
+      <!-- 2. Установка виртуальных машин РЕД ОС -->
+      <details id="sec2">
+        <summary>2. Установка виртуальных машин РЕД ОС</summary>
+        <div>
+          <details><summary>2.1 Описание</summary><div><p>Общее описание процесса установки РЕД ОС в виртуальной среде.</p></div></details>
+          <details><summary>2.2 Создание виртуальной машины</summary><div><p>Шаги по созданию новой ВМ под РЕД ОС.</p></div></details>
+          <details><summary>2.3 Запуск виртуальной машины</summary><div><p>Как запустить созданную ВМ.</p></div></details>
+          <details><summary>2.4 Открытие консоли для виртуальной машины</summary><div><p>Инструкция по подключению к консоли ВМ.</p></div></details>
+          <details><summary>2.5 Гостевые агенты РЕД Виртуализации, инструменты и драйверы</summary><div><p>Описание компонентов гостевой интеграции.</p></div></details>
+          <details><summary>2.6 Установка гостевых агентов и драйверов в РЕД ОС</summary><div><p>Пошаговая установка гостевых инструментов.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section3">
-        <h2>Администрирование виртуальных машин в среде виртуализации</h2>
-        <p>Здесь будет администрирование виртуальных машин в среде виртуализации.</p>
-      </div>
+      <!-- 3. Установка виртуальных машин Windows -->
+      <details id="sec3">
+        <summary>3. Установка виртуальных машин Windows</summary>
+        <div>
+          <details><summary>3.1 Описание</summary><div><p>Особенности установки Windows в виртуальной среде.</p></div></details>
+          <details><summary>3.2 Создание виртуальной машины</summary><div><p>Создание ВМ с Windows.</p></div></details>
+          <details><summary>3.3 Запуск виртуальной машины</summary><div><p>Запуск и первоначальная настройка.</p></div></details>
+          <details>
+            <summary>3.3.1 Установка Windows на оптимизированное для VirtIO оборудование</summary>
+            <div><p>Инструкция по установке с драйверами VirtIO.</p></div>
+          </details>
+          <details>
+            <summary>3.3.2 Открытие консоли на виртуальной машине</summary>
+            <div><p>Подключение к консоли Windows-ВМ.</p></div>
+          </details>
+          <details><summary>3.4 Установка гостевых агентов и драйверов</summary><div><p>Общие шаги установки.</p></div></details>
+          <details><summary>3.4.5 Гостевые агенты, инструменты и драйверы</summary><div><p>Состав и назначение компонентов.</p></div></details>
+          <details><summary>3.4.6 Установка гостевых агентов, инструментов и драйверов в Windows</summary><div><p>Подробная установка в ОС Windows.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section4">
-        <h2>Дополнительная конфигурация</h2>
-        <p>Здесь будет дополнительная конфигурация.</p>
-      </div>
+      <!-- 4. Дополнительная конфигурация -->
+      <details id="sec4">
+        <summary>4. Дополнительная конфигурация</summary>
+        <div>
+          <p>Раздел содержит настройки, улучшающие работу ВМ.</p>
+          <details><summary>4.1 Настройка операционных систем с помощью osinfo</summary><div><p>Использование базы osinfo для автоматической настройки ОС.</p></div></details>
+          <details><summary>4.2 Настройка единого входа для виртуальных машин</summary><div><p>SSO-интеграция.</p></div></details>
+          <details><summary>4.3 Настройка USB-устройств</summary><div><p>Проброс USB-устройств в ВМ.</p></div></details>
+          <details><summary>4.4 Настройка нескольких мониторов</summary><div><p>Поддержка многомониторных конфигураций.</p></div></details>
+          <details><summary>4.5 Настройка параметров консоли</summary><div><p>Настройка разрешения, клавиатуры и т.д.</p></div></details>
+          <details><summary>4.6 Настройка сторожевого таймера</summary><div><p>Watchdog для мониторинга состояния ВМ.</p></div></details>
+          <details><summary>4.7 Настройка виртуального NUMA</summary><div><p>Оптимизация производительности через NUMA.</p></div></details>
+          <details><summary>4.8 Настройка headless-виртуальных машин</summary><div><p>ВМ без графического интерфейса.</p></div></details>
+          <details><summary>4.9 Настройка высокопроизводительных виртуальных машин, шаблонов и пулов</summary><div><p>Оптимизация под нагрузку.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section5">
-        <h2>Редактирование виртуальных машин</h2>
-        <p>Здесь будет редактирование виртуальных машин.</p>
-      </div>
+      <!-- 5. Редактирование виртуальных машин -->
+      <details id="sec5">
+        <summary>5. Редактирование виртуальных машин</summary>
+        <div>
+          <details><summary>5.1 Редактирование свойств виртуальной машины</summary><div><p>Изменение имени, описания, параметров.</p></div></details>
+          <details id="5.2">
+            <summary>5.2 Сетевые интерфейсы</summary>
+            <div>
+              <details><summary>5.2.1 Добавление нового сетевого интерфейса</summary><div><p>Добавление NIC к ВМ.</p></div></details>
+              <details><summary>5.2.2 Редактирование сетевого интерфейса</summary><div><p>Изменение параметров сети.</p></div></details>
+              <details><summary>5.2.3 Горячее подключение сетевого интерфейса</summary><div><p>Без перезагрузки ВМ.</p></div></details>
+              <details><summary>5.2.4 Удаление сетевого интерфейса</summary><div><p>Удаление NIC.</p></div></details>
+              <details><summary>5.2.5 Внесение сетевых интерфейсов в черный список</summary><div><p>Блокировка определённых MAC-адресов.</p></div></details>
+            </div>
+          </details>
+          <details id="5.3">
+            <summary>5.3 Виртуальные диски</summary>
+            <div>
+              <p>Операции с дисками:</p>
+              <details><summary>Добавление нового виртуального диска</summary><div><p>Создание и подключение нового диска.</p></div></details>
+              <details><summary>Присоединение существующего диска к виртуальной машине</summary><div><p>Подключение ранее созданного диска.</p></div></details>
+              <details><summary>Увеличение доступного размера виртуального диска</summary><div><p>Расширение диска без потери данных.</p></div></details>
+              <details><summary>Горячее подключение виртуального диска</summary><div><p>Без перезагрузки ВМ.</p></div></details>
+              <details><summary>Удаление виртуального диска с виртуальной машины</summary><div><p>Отключение и удаление.</p></div></details>
+              <details><summary>Импорт образа диска</summary><div><p>Загрузка образа в хранилище.</p></div></details>
+              <details><summary>Импорт незарегистрированного образа диска</summary><div><p>Ручная регистрация образа.</p></div></details>
+            </div>
+          </details>
+          <details id="5.4">
+            <summary>5.4 Виртуальная память</summary>
+            <div>
+              <details><summary>5.4.1 Горячее подключение виртуальной памяти</summary><div><p>Увеличение RAM без перезагрузки.</p></div></details>
+              <details><summary>5.4.2 Горячее отключение виртуальной памяти</summary><div><p>Снижение объёма RAM (если поддерживается).</p></div></details>
+            </div>
+          </details>
+          <details><summary>5.5 Горячее подключение виртуальных ЦП</summary><div><p>Изменение количества vCPU на лету.</p></div></details>
+          <details><summary>5.6 Прикрепление виртуальной машины к нескольким хостам</summary><div><p>Настройка HA-групп.</p></div></details>
+          <details><summary>5.7 Просмотр виртуальных машин, закрепленных на хосте</summary><div><p>Анализ привязки ВМ к хостам.</p></div></details>
+          <details><summary>5.8 Смена компакт-диска на виртуальную машину</summary><div><p>Монтирование ISO-образа.</p></div></details>
+          <details><summary>5.9 Проверка подлинности смарт-карты</summary><div><p>Интеграция со смарт-картами.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section6">
-        <h2>Административные задачи</h2>
-        <p>Здесь будут административные задачи.</p>
-      </div>
+      <!-- 6. Административные задачи -->
+      <details id="sec6">
+        <summary>6. Административные задачи</summary>
+        <div>
+          <details><summary>6.1 Завершение работы виртуальной машины</summary><div><p>Корректное выключение ВМ.</p></div></details>
+          <details><summary>6.2 Приостановка виртуальной машины</summary><div><p>Сохранение состояния в памяти.</p></div></details>
+          <details><summary>6.3 Перезагрузка виртуальной машины</summary><div><p>Перезапуск ВМ.</p></div></details>
+          <details><summary>6.4 Удаление виртуальной машины</summary><div><p>Полное удаление ВМ и её ресурсов.</p></div></details>
+          <details><summary>6.5 Клонирование виртуальной машины</summary><div><p>Создание копии ВМ.</p></div></details>
+          <details id="6.6">
+            <summary>6.6 Обновление гостевых агентов и драйверов</summary>
+            <div>
+              <details><summary>6.6.1 Обновление гостевых агентов и драйверов в РЕД ОС</summary><div><p>Процедура обновления в Linux.</p></div></details>
+              <details><summary>6.6.2 Обновление гостевых агентов и драйверов в Windows</summary><div><p>Процедура обновления в Windows.</p></div></details>
+            </div>
+          </details>
+          <details id="6.7">
+            <summary>6.7 Снимки</summary>
+            <div>
+              <details><summary>6.7.1 Создание снимка виртуальной машины</summary><div><p>Создание точки восстановления.</p></div></details>
+              <details><summary>6.7.2 Использование снимка для восстановления виртуальной машины</summary><div><p>Откат к снимку.</p></div></details>
+              <details><summary>6.7.3 Создание виртуальной машины из снимка</summary><div><p>Клонирование из снимка.</p></div></details>
+              <details><summary>6.7.4 Удаление снимка</summary><div><p>Освобождение места.</p></div></details>
+            </div>
+          </details>
+          <details id="6.8">
+            <summary>6.8 Хост-устройства</summary>
+            <div>
+              <details><summary>6.8.1 Добавление хост-устройства к виртуальной машине</summary><div><p>Проброс PCI/USB-устройств.</p></div></details>
+              <details><summary>6.8.2 Удаление хост-устройств с виртуальной машины</summary><div><p>Отключение устройства.</p></div></details>
+              <details><summary>6.8.3 Прикрепление виртуальной машины к другому хосту</summary><div><p>Миграция ВМ.</p></div></details>
+            </div>
+          </details>
+          <details id="6.9">
+            <summary>6.9 Группы по интересам</summary>
+            <div>
+              <details><summary>6.9.1 Создание группы по интересам</summary><div><p>Группировка ВМ по меткам.</p></div></details>
+              <details><summary>6.9.2 Редактирование группы по интересам</summary><div><p>Изменение состава или параметров.</p></div></details>
+              <details><summary>6.9.3 Удаление группы по интересам</summary><div><p>Удаление без влияния на ВМ.</p></div></details>
+              <details><summary>6.9.4 Примеры групп по интересам</summary><div><p>Практические сценарии.</p></div></details>
+              <details><summary>6.9.5 Устранение неполадок группы по интересам</summary><div><p>Диагностика проблем.</p></div></details>
+            </div>
+          </details>
+          <details id="6.10">
+            <summary>6.10 Метки соответствия</summary>
+            <div>
+              <details><summary>6.10.1 Создание метки соответствия</summary><div><p>Настройка политик размещения.</p></div></details>
+              <details><summary>6.10.2 Редактирование метки соответствия</summary><div><p>Изменение условий.</p></div></details>
+              <details><summary>6.10.3 Удаление метки соответствия</summary><div><p>Отмена политики.</p></div></details>
+            </div>
+          </details>
+          <details id="6.11">
+            <summary>6.11 Экспорт и импорт виртуальных машин и шаблонов</summary>
+            <div>
+              <details><summary>6.11.1 Экспорт виртуальной машины в экспортный домен</summary><div><p>Экспорт для резервного копирования.</p></div></details>
+              <details><summary>6.11.2 Экспорт виртуальной машины в домен данных</summary><div><p>Перемещение между доменами.</p></div></details>
+              <details><summary>6.11.3 Импорт виртуальной машины из экспортного домена</summary><div><p>Восстановление из архива.</p></div></details>
+              <details><summary>6.11.4 Импорт виртуальной машины от поставщика VMware</summary><div><p>Миграция с VMware.</p></div></details>
+              <details><summary>6.11.5 Экспорт виртуальной машины на хост</summary><div><p>Локальное сохранение.</p></div></details>
+              <details><summary>6.11.6 Импорт виртуальной машины с хоста</summary><div><p>Загрузка с локального хранилища.</p></div></details>
+              <details><summary>6.11.7 Импорт виртуальной машины с узла KVM</summary><div><p>Интеграция с KVM-хостами.</p></div></details>
+            </div>
+          </details>
+          <details id="6.12">
+            <summary>6.12 Перенос виртуальных машин между хостами</summary>
+            <div>
+              <details><summary>6.12.1 Предварительные условия для живой миграции</summary><div><p>Требования к сети и хранилищу.</p></div></details>
+              <details><summary>6.12.2 Оптимизация живой миграции</summary><div><p>Настройка параметров для скорости.</p></div></details>
+              <details><summary>6.12.3 Хуки для гостевого агента</summary><div><p>Скрипты перед/после миграции.</p></div></details>
+              <details><summary>6.12.4 Автоматическая миграция виртуальной машины</summary><div><p>Балансировка нагрузки.</p></div></details>
+              <details><summary>6.12.5 Предотвращение автоматической миграции виртуальной машины</summary><div><p>Фиксация ВМ на хосте.</p></div></details>
+              <details><summary>6.12.6 Перенос виртуальных машин вручную</summary><div><p>Ручная миграция через интерфейс.</p></div></details>
+              <details><summary>6.12.7 Установка приоритета миграции</summary><div><p>Настройка политик.</p></div></details>
+              <details><summary>6.12.8 Отмена текущей миграции виртуальных машин</summary><div><p>Прерывание процесса.</p></div></details>
+              <details><summary>6.12.9 Уведомление о событиях и журналах при автоматической миграции</summary><div><p>Мониторинг и алерты.</p></div></details>
+            </div>
+          </details>
+          <details id="6.13">
+            <summary>6.13 Повышение времени безотказной работы за счет высокой доступности виртуальных машин</summary>
+            <div>
+              <details><summary>6.13.1 Что такое высокая доступность?</summary><div><p>Определение и принципы HA.</p></div></details>
+              <details><summary>6.13.2 Рекомендации по обеспечению высокой доступности</summary><div><p>Best practices.</p></div></details>
+              <details><summary>6.13.3 Настройка высокодоступной виртуальной машины</summary><div><p>Шаги по включению HA.</p></div></details>
+            </div>
+          </details>
+          <details id="6.14">
+            <summary>6.14 Другие задачи виртуальной машины</summary>
+            <div>
+              <details><summary>6.14.1 Включение мониторинга SAP</summary><div><p>Интеграция с SAP-мониторингом.</p></div></details>
+              <details><summary>6.14.2 Настройка виртуальных машин РЕД ОС для использования SPICE</summary><div><p>Настройка графической консоли.</p></div></details>
+              <details><summary>6.14.3 Управление синхронизацией виртуальной машины KVM</summary><div><p>Настройка времени и синхронизации.</p></div></details>
+            </div>
+          </details>
+          <details id="6.15">
+            <summary>6.15 Управление консольными сессиями пользователей</summary>
+            <div>
+              <details><summary>6.15.1 Текущие активные сессии пользователей</summary><div><p>Просмотр активных сессий.</p></div></details>
+              <details><summary>6.15.2 Прерывание активных сессий пользователей</summary><div><p>Принудительное завершение.</p></div></details>
+            </div>
+          </details>
+        </div>
+      </details>
 
-      <div id="section7">
-        <h2>Шаблоны</h2>
-        <p>Здесь будут шаблоны.</p>
-      </div>
+      <!-- 7. Шаблоны -->
+      <details id="sec7">
+        <summary>7. Шаблоны</summary>
+        <div>
+          <details id="7.1">
+            <summary>7.1 Запечатывание виртуальных машин</summary>
+            <div>
+              <details><summary>7.1.1 Описание</summary><div><p>Цель и процесс запечатывания.</p></div></details>
+              <details><summary>7.1.2 Запечатывание виртуальной машины Linux</summary><div><p>Инструкция для РЕД ОС.</p></div></details>
+              <details><summary>7.1.3 Запечатывание виртуальной машины Windows</summary><div><p>Использование Sysprep.</p></div></details>
+            </div>
+          </details>
+          <details><summary>7.2 Создание шаблона</summary><div><p>Преобразование ВМ в шаблон.</p></div></details>
+          <details><summary>7.3 Редактирование шаблона</summary><div><p>Изменение параметров шаблона.</p></div></details>
+          <details><summary>7.4 Удаление шаблона</summary><div><p>Удаление без влияния на созданные ВМ.</p></div></details>
+          <details id="7.5">
+            <summary>7.5 Экспорт шаблонов</summary>
+            <div>
+              <details><summary>7.5.1 Перенос шаблонов в экспортный домен</summary><div><p>Экспорт для архивации.</p></div></details>
+              <details><summary>7.5.2 Копирование шаблона виртуального жесткого диска</summary><div><p>Резервное копирование диска.</p></div></details>
+            </div>
+          </details>
+          <details id="7.6">
+            <summary>7.6 Импорт шаблонов</summary>
+            <div>
+              <details><summary>7.6.1 Импорт шаблона в центр обработки данных</summary><div><p>Восстановление шаблона.</p></div></details>
+              <details><summary>7.6.2 Импорт виртуального диска из службы образов OpenStack</summary><div><p>Интеграция с OpenStack.</p></div></details>
+            </div>
+          </details>
+          <details id="7.7">
+            <summary>7.7 Шаблоны и разрешения</summary>
+            <div>
+              <details><summary>7.7.1 Управление системными разрешениями для шаблона</summary><div><p>Настройка ACL.</p></div></details>
+              <details><summary>7.7.2 Назначение ресурсу роли администратора или пользователя</summary><div><p>Ролевая модель.</p></div></details>
+              <details><summary>7.7.3 Удаление роли администратора или пользователя из ресурса</summary><div><p>Отзыв доступа.</p></div></details>
+            </div>
+          </details>
+          <details id="7.8">
+            <summary>7.8 Использование Cloud-Init</summary>
+            <div>
+              <details><summary>7.8.1 Сценарии использования Cloud-Init</summary><div><p>Автоматизация развёртывания.</p></div></details>
+              <details><summary>7.8.2 Установка Cloud-Init</summary><div><p>Установка в ОС.</p></div></details>
+              <details><summary>7.8.3 Использование Cloud-Init для подготовки шаблона</summary><div><p>Настройка шаблона.</p></div></details>
+              <details><summary>7.8.4 Использование Cloud-Init для инициализации виртуальной машины</summary><div><p>Первая загрузка ВМ.</p></div></details>
+            </div>
+          </details>
+          <details id="7.9">
+            <summary>7.9 Использование Sysprep</summary>
+            <div>
+              <details><summary>7.9.1 Настройка Sysprep на шаблоне</summary><div><p>Подготовка Windows-шаблона.</p></div></details>
+              <details><summary>7.9.2 Использование Sysprep для инициализации виртуальной машины</summary><div><p>Персонализация при создании.</p></div></details>
+            </div>
+          </details>
+          <details><summary>7.10 Создание виртуальной машины на основе шаблона</summary><div><p>Развёртывание из шаблона.</p></div></details>
+          <details><summary>7.11 Создание клонированной виртуальной машины</summary><div><p>Полная копия ВМ.</p></div></details>
+        </div>
+      </details>
 
-      <div id="section8">
-        <h2>Группы виртуальных машин</h2>
-        <p>Здесь будут группы виртуальных машин.</p>
-      </div>
-
-      <!-- Подробные разделы -->
-      <div id="1.1"><h3>1.1 Описание</h3><p>Описание продукта и его назначения.</p></div>
-      <div id="1.2"><h3>1.2 Ограничения виртуальных машин</h3><p>Перечень ограничений при работе с виртуальными машинами.</p></div>
-      <div id="1.3"><h3>1.3 Установка вспомогательных компонентов</h3><p>Инструкции по установке необходимых компонентов.</p></div>
-      <div id="1.3.1"><h3>1.3.1 Установка компонентов консоли</h3><p>Установка компонентов для работы через консоль.</p></div>
-      <div id="1.3.2"><h3>1.3.2 Установка usbdk в Windows</h3><p>Инструкция по установке USBDK для работы с USB-устройствами.</p></div>
-      <div id="1.4"><h3>1.4 Авторизация на портале</h3><p>Как авторизоваться на портале управления.</p></div>
-      <div id="1.5"><h3>1.5 Завершение сеанса на портале</h3><p>Как безопасно завершить сеанс.</p></div>
-
-      <!-- ... и так далее для всех пунктов -->
-
-      <!-- Пример блока с выделением -->
-      <div class="highlight">
-        <strong>Важно!</strong> Все действия выполняются только после авторизации. 
-        Не забудьте завершить сеанс при окончании работы.
-      </div>
+      <!-- 8. Группы виртуальных машин -->
+      <details id="sec8">
+        <summary>8. Группы виртуальных машин</summary>
+        <div>
+          <details><summary>8.1 Создание группы ВМ</summary><div><p>Группировка по меткам или политикам.</p></div></details>
+          <details><summary>8.2 Назначение прав доступа группе ВМ</summary><div><p>Контроль доступа на уровне группы.</p></div></details>
+          <details><summary>8.3 Добавление новой виртуальной машины в группу ВМ</summary><div><p>Автоматическое включение при создании.</p></div></details>
+          <details><summary>8.4 Добавление существующей виртуальной машины в группу ВМ</summary><div><p>Ручное добавление.</p></div></details>
+          <details><summary>8.5 Перемещение нескольких виртуальных машин в группу ВМ</summary><div><p>Массовое управление.</p></div></details>
+        </div>
+      </details>
 
     </main>
   </div>
 
+  <!-- Простой скрипт для прокрутки к якорю -->
+  <script>
+    // При загрузке страницы — прокрутить к якорю, если он есть
+    window.addEventListener('load', () => {
+      if (window.location.hash) {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          // Открыть все родительские details
+          let parent = target.closest('details');
+          while (parent) {
+            parent.open = true;
+            parent = parent.parentElement ? parent.parentElement.closest('details') : null;
+          }
+          // Прокрутка с небольшим отступом
+          setTimeout(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
